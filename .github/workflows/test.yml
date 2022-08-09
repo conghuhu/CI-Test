@@ -29,13 +29,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Install PCRE
-      run: |
-        sudo apt update
-        sudo apt install gcc libpcre3 libpcre3-dev
     - name: Install Kong and setup kong-authz
       run: |
         # install and configure kong
+        sudo apt update
+        sudo apt install gcc libpcre3 libpcre3-dev
         curl -Lo kong.2.5.0.amd64.deb "https://download.konghq.com/gateway-2.x-ubuntu-$(lsb_release -cs)/pool/all/k/kong/kong_2.5.0_amd64.deb"
         sudo dpkg -i kong.2.5.0.amd64.deb
         sudo cp /etc/kong/kong.conf.default /etc/kong/kong.conf
@@ -46,9 +44,8 @@ jobs:
         sudo kong migrations bootstrap
         sudo kong migrations up -c /etc/kong/kong.conf
         # install dependencies.
-        sudo luarocks install luasec
         sudo luarocks install https://raw.githubusercontent.com/casbin/lua-casbin/master/casbin-1.41.1-1.rockspec
-        sudo luarocks make *.rockspec
+        sudo luarocks install *.rockspec
         # setup kong-authz
         sudo kong start -c /etc/kong/kong.conf
         sudo cp examples/authz_model.conf /etc/kong/authz_model.conf
