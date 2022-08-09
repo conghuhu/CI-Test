@@ -45,7 +45,7 @@ jobs:
         sudo kong migrations up -c /etc/kong/kong.conf
         # install dependencies.
         sudo luarocks install https://raw.githubusercontent.com/casbin/lua-casbin/master/casbin-1.41.1-1.rockspec
-        sudo luarocks make *.rockspec
+        sudo luarocks install *.rock
         # setup kong-authz
         sudo kong start -c /etc/kong/kong.conf
         sudo cp examples/authz_model.conf /etc/kong/authz_model.conf
