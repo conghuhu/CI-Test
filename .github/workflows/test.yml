@@ -41,7 +41,7 @@ jobs:
       uses: leafo/gh-actions-luarocks@v4.0.0
     - name: Install Kong and setup kong-authz
       run: |
-        # install dependencies
+        # install dependencies.
         sudo luarocks install luasec
         sudo luarocks install https://raw.githubusercontent.com/casbin/lua-casbin/master/casbin-1.41.1-1.rockspec
         sudo luarocks make *.rockspec
