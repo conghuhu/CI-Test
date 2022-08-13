@@ -158,7 +158,6 @@ jobs:
       # - name: Run luasql test
       #   run: |
       #     busted plugin_test.lua -o htest
-      #     cat /usr/local/kong/logs/error.log
 
       - name: Set Kong-authz plugin globally by 4daysorm
         env:
@@ -184,12 +183,18 @@ jobs:
           --data 'config.db_info.port=3306' > temp3.log
 
           source temp3.log > result3
+          cat result3
           id=$(cat result3 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
           echo "ORM_PLUGIN_ID=$id" >> $GITHUB_ENV
 
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
+
+          echo curl -i -X POST --url http://127.0.0.1:8000/ --header 'user: anonymous' > temp4.log
+          source temp4.log > result4
+          cat result4
+          cat /usr/local/kong/logs/error.log
           
       - name: Run 4daysorm test
         run: |
