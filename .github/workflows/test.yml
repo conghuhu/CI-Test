@@ -85,8 +85,8 @@ jobs:
 
           source temp1.log > result1
           id=$(cat result1 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
-          echo "id=$id" >> $GITHUB_ENV
-          echo "${{ env.id }}"
+          echo "FILE_PLUGIN_ID=$id" >> $GITHUB_ENV
+          echo "${{ env.FILE_PLUGIN_ID }}"
 
           # restart kong
           sudo kong stop
@@ -123,13 +123,13 @@ jobs:
           MYSQL_PASSWORD: root
         run: |
           # remove last plugin
-          echo "${{ env.id }}"
-          curl -i -X DELETE --url http://localhost:8001/plugins/${{ env.id }}
+          echo "${{ env.FILE_PLUGIN_ID }}"
+          curl -i -X DELETE --url http://localhost:8001/plugins/${{ env.FILE_PLUGIN_ID }}
           # set the plugin globally
           echo curl -i -X POST \
           --url http://localhost:8001/plugins/ \
           --data 'name=kong-authz' \
-          --data 'config.model_path=/mnt/kong/examples/authz_model.conf' \
+          --data 'config.model_path=/etc/kong/authz_model.conf' \
           --data 'config.username=user' \
           --data 'config.adapter=luasql' \
           --data 'config.db_info.db_type=mysql' \
@@ -141,8 +141,8 @@ jobs:
 
           source temp2.log > result2
           id=$(cat result2 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
-          echo "id=$id" >> $GITHUB_ENV
-          echo "${{ env.id }}"
+          echo "SQL_PLUGIN_ID=$id" >> $GITHUB_ENV
+          echo "${{ env.SQL_PLUGIN_ID }}"
 
           # restart kong
           sudo kong stop
@@ -159,15 +159,16 @@ jobs:
           MYSQL_PASSWORD: root
         run: |
           # remove last plugin
-          curl -i -X DELETE --url http://localhost:8001/plugins/${{ env.id }}
+          echo "${{ env.SQL_PLUGIN_ID }}"
+          curl -i -X DELETE --url http://localhost:8001/plugins/${{ env.SQL_PLUGIN_ID }}
           # set the plugin globally
           echo curl -i -X POST \
           --url http://localhost:8001/plugins/ \
           --data 'name=kong-authz' \
-          --data 'config.model_path=/mnt/kong/examples/authz_model.conf' \
+          --data 'config.model_path=/etc/kong/authz_model.conf' \
           --data 'config.username=user' \
-          --data 'config.adapter=luasql' \
-          --data 'config.db_info.db_type=4daysorm' \
+          --data 'config.adapter=4daysorm' \
+          --data 'config.db_info.db_type=mysql' \
           --data 'config.db_info.database=${{ env.MYSQL_DB }}' \
           --data 'config.db_info.username=${{ env.MYSQL_USER }}' \
           --data 'config.db_info.password=${{ env.MYSQL_PASSWORD }}' \
@@ -176,8 +177,8 @@ jobs:
 
           source temp3.log > result3
           id=$(cat result3 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
-          echo "id=$id" >> $GITHUB_ENV
-          echo "${{ env.id }}"
+          echo "ORM_PLUGIN_ID=$id" >> $GITHUB_ENV
+          echo "${{ env.ORM_PLUGIN_ID }}"
 
           # restart kong
           sudo kong stop
