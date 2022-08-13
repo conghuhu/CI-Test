@@ -84,8 +84,9 @@ jobs:
           --data 'config.username=user' > temp1.log
 
           source temp1.log > result1
-          export id=$(cat result1 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
-          echo $id
+          id=$(cat result1 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
+          echo "id=$id" >> $GITHUB_ENV
+          echo "${{ env.id }}"
 
           # restart kong
           sudo kong stop
@@ -125,8 +126,8 @@ jobs:
           MYSQL_PASSWORD: root
         run: |
           # remove last plugin
-          echo $id
-          curl -i -X DELETE --url http://localhost:8001/plugins/$id
+          echo "${{ env.id }}"
+          curl -i -X DELETE --url http://localhost:8001/plugins/${{ env.id }}
           # set the plugin globally
           echo curl -i -X POST \
           --url http://localhost:8001/plugins/ \
@@ -142,8 +143,9 @@ jobs:
           --data 'config.db_info.port=3306' > temp2.log
 
           source temp2.log > result2
-          export id=$(cat result2 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
-          echo $id
+          id=$(cat result2 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
+          echo "id=$id" >> $GITHUB_ENV
+          echo "${{ env.id }}"
 
           # restart kong
           sudo kong stop
@@ -160,7 +162,7 @@ jobs:
           MYSQL_PASSWORD: root
         run: |
           # remove last plugin
-          curl -i -X DELETE --url http://localhost:8001/plugins/$id
+          curl -i -X DELETE --url http://localhost:8001/plugins/${{ env.id }}
           # set the plugin globally
           echo curl -i -X POST \
           --url http://localhost:8001/plugins/ \
@@ -176,8 +178,9 @@ jobs:
           --data 'config.db_info.port=3306' > temp3.log
 
           source temp3.log > result3
-          export id=$(cat result3 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
-          echo $id
+          id=$(cat result3 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
+          echo "id=$id" >> $GITHUB_ENV
+          echo "${{ env.id }}"
 
           # restart kong
           sudo kong stop
