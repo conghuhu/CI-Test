@@ -88,7 +88,6 @@ jobs:
           source temp1.log > result1
           id=$(cat result1 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
           echo "FILE_PLUGIN_ID=$id" >> $GITHUB_ENV
-          echo "${{ env.FILE_PLUGIN_ID }}"
 
           # restart kong
           sudo kong stop
@@ -145,12 +144,10 @@ jobs:
           cat result2
           id=$(cat result2 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
           echo "SQL_PLUGIN_ID=$id" >> $GITHUB_ENV
-          echo "${{ env.SQL_PLUGIN_ID }}"
 
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
-
       - name: Run luasql test
         run: |
           busted plugin_test.lua -o htest
@@ -181,7 +178,6 @@ jobs:
           source temp3.log > result3
           id=$(cat result3 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
           echo "ORM_PLUGIN_ID=$id" >> $GITHUB_ENV
-          echo "${{ env.ORM_PLUGIN_ID }}"
 
           # restart kong
           sudo kong stop
