@@ -190,6 +190,7 @@ jobs:
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
+          
       - name: Run 4daysorm test
         run: |
           busted plugin_test.lua -o htest
