@@ -136,7 +136,7 @@ jobs:
           --data 'config.db_info.db_type=mysql' \
           --data 'config.db_info.database=${{ env.MYSQL_DB }}' \
           --data 'config.db_info.username=${{ env.MYSQL_USER }}' \
-          --data 'config.db_info.password=${{ env.MYSQL_PASSWORD }}' \
+          --data 'config.db_info.password=root' \
           --data 'config.db_info.host=127.0.0.1' \
           --data 'config.db_info.port=3306' > temp2.log
 
