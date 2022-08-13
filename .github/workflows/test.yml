@@ -140,6 +140,7 @@ jobs:
           --data 'config.db_info.port=3306' > temp2.log
 
           source temp2.log > result2
+          cat result2
           id=$(cat result2 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
           echo "SQL_PLUGIN_ID=$id" >> $GITHUB_ENV
           echo "${{ env.SQL_PLUGIN_ID }}"
