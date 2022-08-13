@@ -154,9 +154,11 @@ jobs:
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
+          cat /usr/local/kong/logs/error.log
       - name: Run luasql test
         run: |
           busted plugin_test.lua -o htest
+          cat /usr/local/kong/logs/error.log
 
       - name: Set Kong-authz plugin globally by 4daysorm
         env:
