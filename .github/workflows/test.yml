@@ -42,26 +42,26 @@ jobs:
         sudo git clone https://github.com/casbin-lua/luasql-adapter.git
         sleep 1
         # configure kong
-        sudo cp /etc/kong/kong.conf.default /etc/kong/kong.conf
-        sudo bash -c 'echo "pg_user = kong" >> /etc/kong/kong.conf'
-        sudo bash -c 'echo "pg_password = kong" >> /etc/kong/kong.conf'
-        sudo bash -c 'echo "pg_database = kong" >> /etc/kong/kong.conf'
-        sudo bash -c 'echo "plugins = bundled, kong-authz" >> /etc/kong/kong.conf'
-        sudo kong migrations bootstrap
-        sudo kong migrations up -c /etc/kong/kong.conf
-        # setup kong-authz
-        sudo kong start -c /etc/kong/kong.conf
-        sudo cp examples/authz_model.conf /etc/kong/authz_model.conf
-        sudo cp examples/authz_policy.csv /etc/kong/authz_policy.csv
-        # set up an example service
-        curl -i -X POST \
-        --url http://localhost:8001/services/ \
-        --data 'name=example-service' \
-        --data 'url=http://mockbin.org'
-        # set up an example route
-        curl -i -X POST \
-        --url http://localhost:8001/services/example-service/routes \
-        --data 'hosts[]=example.com'
+        # sudo cp /etc/kong/kong.conf.default /etc/kong/kong.conf
+        # sudo bash -c 'echo "pg_user = kong" >> /etc/kong/kong.conf'
+        # sudo bash -c 'echo "pg_password = kong" >> /etc/kong/kong.conf'
+        # sudo bash -c 'echo "pg_database = kong" >> /etc/kong/kong.conf'
+        # sudo bash -c 'echo "plugins = bundled, kong-authz" >> /etc/kong/kong.conf'
+        # sudo kong migrations bootstrap
+        # sudo kong migrations up -c /etc/kong/kong.conf
+        # # setup kong-authz
+        # sudo kong start -c /etc/kong/kong.conf
+        # sudo cp examples/authz_model.conf /etc/kong/authz_model.conf
+        # sudo cp examples/authz_policy.csv /etc/kong/authz_policy.csv
+        # # set up an example service
+        # curl -i -X POST \
+        # --url http://localhost:8001/services/ \
+        # --data 'name=example-service' \
+        # --data 'url=http://mockbin.org'
+        # # set up an example route
+        # curl -i -X POST \
+        # --url http://localhost:8001/services/example-service/routes \
+        # --data 'hosts[]=example.com'
     - name: Set up Lua
       uses: leafo/gh-actions-lua@v8.0.0
       with:
@@ -73,6 +73,7 @@ jobs:
         luarocks install busted
         luarocks install busted-htest
         luarocks install luasocket
+        luarocks install luasec
     # - name: Set Kong-authz plugin globally by file
     #   run: |
     #     # set the plugin globally
@@ -98,7 +99,11 @@ jobs:
         sudo /etc/init.d/mysql start
         mysql -e 'CREATE DATABASE ${{ env.MYSQL_DB }};' -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASSWORD }}
         sudo apt install sqlite3 libsqlite3-dev lua-sql-mysql libpq-dev
-        luarocks install luasql-mysql MYSQL_INCDIR=/usr/include/mysql/
-        luarocks install luasql-postgres PGSQL_INCDIR=/usr/include/postgresql/ 
-        luarocks install luasql-sqlite3
+        pwd
+        cd ..
+        sudo git clone https://github.com/lunarmodules/luasql.git
+        cd luasql/rockspec
+        sudo luarocks make luasql-mysql-2.6.0-1.rockspec MYSQL_INCDIR=/usr/include/mysql/
+        sudo luarocks make luasql-odbc-2.6.0-1.rockspec PGSQL_INCDIR=/usr/include/postgresql/
+        sudo luarocks install luasql-sqlite3-2.6.0-1.rockspec
       
