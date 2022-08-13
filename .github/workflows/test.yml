@@ -29,6 +29,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        
       - name: Install Kong and setup kong-authz
         run: |
           # install and configure kong
