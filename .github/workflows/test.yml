@@ -116,9 +116,9 @@ jobs:
           sudo luarocks make luasql-sqlite3-2.6.0-1.rockspec
           cd ..
           # init policy data
-          export MYSQL_DB='${{ env.MYSQL_DB }}'
-          export MYSQL_USER='${{ env.MYSQL_USER }}'
-          export MYSQL_PASSWORD='${{ env.MYSQL_PASSWORD }}'
+          export MYSQL_DB=${{ env.MYSQL_DB }}
+          export MYSQL_USER=${{ env.MYSQL_USER }}
+          export MYSQL_PASSWORD=${{ env.MYSQL_PASSWORD }}
           lua ./examples/luasqlDB.lua
           sleep 1
           lua ./examples/ormDB.lua
