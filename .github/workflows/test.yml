@@ -110,10 +110,11 @@ jobs:
           sudo cp ./luasql-mysql-2.6.0-1.rockspec ../luasql-mysql-2.6.0-1.rockspec
           sudo cp ./luasql-postgres-2.6.0-1.rockspec ../luasql-postgres-2.6.0-1.rockspec
           sudo cp ./luasql-sqlite3-2.6.0-1.rockspec ../luasql-sqlite3-2.6.0-1.rockspec
-          cd ../..
+          cd ..
           sudo luarocks make luasql-mysql-2.6.0-1.rockspec MYSQL_INCDIR=/usr/include/mysql/
           sudo luarocks make luasql-postgres-2.6.0-1.rockspec PGSQL_INCDIR=/usr/include/postgresql/
           sudo luarocks make luasql-sqlite3-2.6.0-1.rockspec
+          cd ..
 
       - name: Set Kong-authz plugin globally by luasql
         env:
