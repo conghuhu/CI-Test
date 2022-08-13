@@ -43,7 +43,6 @@ jobs:
           sleep 1
           # configure kong
           sudo cp /etc/kong/kong.conf.default /etc/kong/kong.conf
-          sudo bash -c 'echo "proxy_error_log = /etc/kong/log/kong_error.log" >> /etc/kong/kong.conf'
           sudo bash -c 'echo "pg_user = kong" >> /etc/kong/kong.conf'
           sudo bash -c 'echo "pg_password = kong" >> /etc/kong/kong.conf'
           sudo bash -c 'echo "pg_database = kong" >> /etc/kong/kong.conf'
@@ -149,11 +148,11 @@ jobs:
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
-          cat /etc/kong/log/kong_error.log
+          cat /etc/kong/logs/error.log
       - name: Run luasql test
         run: |
           busted plugin_test.lua -o htest
-          cat /etc/kong/log/kong_error.log
+          cat /etc/kong/logs/error.log
 
       - name: Set Kong-authz plugin globally by 4daysorm
         env:
@@ -185,7 +184,7 @@ jobs:
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
-          
+
       - name: Run 4daysorm test
         run: |
           busted plugin_test.lua -o htest
