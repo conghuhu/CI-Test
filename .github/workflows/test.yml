@@ -105,7 +105,6 @@ jobs:
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE ${{ env.MYSQL_DB }};' -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASSWORD }}
           sudo apt install sqlite3 libsqlite3-dev lua-sql-mysql libpq-dev
-          # cd ..
           sudo git clone https://github.com/lunarmodules/luasql.git
           cd luasql/rockspec
           sudo cp ./luasql-mysql-2.6.0-1.rockspec ../luasql-mysql-2.6.0-1.rockspec
@@ -116,7 +115,14 @@ jobs:
           sudo luarocks make luasql-postgres-2.6.0-1.rockspec PGSQL_INCDIR=/usr/include/postgresql/
           sudo luarocks make luasql-sqlite3-2.6.0-1.rockspec
           cd ..
-
+          # init policy data
+          export MYSQL_DB = {{ env.MYSQL_DB }}
+          export MYSQL_USER = {{ env.MYSQL_USER }}
+          export MYSQL_PASSWORD = {{ env.MYSQL_PASSWORD }}
+          lua ./examples/luasqlDB.lua
+          sleep 1
+          lua ./examples/ormDB.lua
+          sleep 1
       - name: Set Kong-authz plugin globally by luasql
         env:
           MYSQL_DB: casbin
@@ -148,11 +154,9 @@ jobs:
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
-          cat /etc/kong/logs/error.log
       - name: Run luasql test
         run: |
           busted plugin_test.lua -o htest
-          cat /etc/kong/logs/error.log
 
       - name: Set Kong-authz plugin globally by 4daysorm
         env:
