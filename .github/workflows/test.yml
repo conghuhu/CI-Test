@@ -191,7 +191,8 @@ jobs:
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
 
-          echo curl -i -X POST --url http://127.0.0.1:8000/ --header 'user: anonymous' > temp4.log
+          echo curl -i -X POST --url http://127.0.0.1:8000/ --header 'user: anonymous' --header 'host: example.com' > temp4.log
+
           source temp4.log > result4
           cat result4
           cat /usr/local/kong/logs/error.log
