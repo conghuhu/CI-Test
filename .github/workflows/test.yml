@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: Install Kong and setup kong-authz
         run: |
           # install and configure kong
@@ -49,6 +49,7 @@ jobs:
           sudo bash -c 'echo "plugins = bundled, kong-authz" >> /etc/kong/kong.conf'
           sudo kong migrations bootstrap
           sudo kong migrations up -c /etc/kong/kong.conf
+          sleep 1
           # setup kong-authz
           sudo kong start -c /etc/kong/kong.conf
           sudo cp examples/authz_model.conf /etc/kong/authz_model.conf
