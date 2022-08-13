@@ -84,7 +84,7 @@ jobs:
           --data 'config.username=user' > temp1.log
 
           source temp1.log > result1
-          id=$(cat result1 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
+          export id=$(cat result1 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
           echo $id
 
           # restart kong
@@ -141,14 +141,14 @@ jobs:
           --data 'config.db_info.port=3306' > temp2.log
 
           source temp2.log > result2
-          id=$(cat result2 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
+          export id=$(cat result2 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
           echo $id
 
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
 
-      - name: Run file test
+      - name: Run luasql test
         run: |
           busted plugin_test.lua -o htest
 
@@ -175,12 +175,12 @@ jobs:
           --data 'config.db_info.port=3306' > temp3.log
 
           source temp3.log > result3
-          id=$(cat result3 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
+          export id=$(cat result3 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
           echo $id
 
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
-      - name: Run file test
+      - name: Run 4daysorm test
         run: |
           busted plugin_test.lua -o htest
