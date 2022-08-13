@@ -73,34 +73,32 @@ jobs:
         luarocks install busted
         luarocks install busted-htest
         luarocks install luasocket
-    - name: Set Kong-authz plugin globally by file
+    # - name: Set Kong-authz plugin globally by file
+    #   run: |
+    #     # set the plugin globally
+    #     curl -i -X POST \
+    #     --url http://localhost:8001/plugins/ \
+    #     --data 'name=kong-authz' \
+    #     --data 'config.model_path=/etc/kong/authz_model.conf' \
+    #     --data 'config.policy_path=/etc/kong/authz_policy.csv' \
+    #     --data 'config.username=user'
+    #     # restart kong
+    #     sudo kong stop
+    #     sudo kong start -c /etc/kong/kong.conf
+    # - name: Run file test
+    #   run: |
+    #     busted plugin_test.lua -o htest
+
+    - name: Install Casbin, dependencies and setup environment
+      env:
+          MYSQL_DB: casbin
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
       run: |
-        # set the plugin globally
-        curl -i -X POST \
-        --url http://localhost:8001/plugins/ \
-        --data 'name=kong-authz' \
-        --data 'config.model_path=/etc/kong/authz_model.conf' \
-        --data 'config.policy_path=/etc/kong/authz_policy.csv' \
-        --data 'config.username=user'
-        # restart kong
-        sudo kong stop
-        sudo kong start -c /etc/kong/kong.conf
-    - name: Run file test
-      run: |
-        busted plugin_test.lua -o htest
-    - name: Set Kong-authz plugin globally by file
-      run: |
-        # set the plugin globally
-        curl -i -X POST \
-        --url http://localhost:8001/plugins/ \
-        --data 'name=kong-authz' \
-        --data 'config.model_path=/etc/kong/authz_model.conf' \
-        --data 'config.policy_path=/etc/kong/authz_policy.csv' \
-        --data 'config.username=user'
-        # restart kong
-        sudo kong stop
-        sudo kong start -c /etc/kong/kong.conf
-    - name: Run file test
-      run: |
-        busted plugin_test.lua -o htest
+        sudo /etc/init.d/mysql start
+        mysql -e 'CREATE DATABASE ${{ env.MYSQL_DB }};' -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASSWORD }}
+        sudo apt install sqlite3 libsqlite3-dev lua-sql-mysql libpq-dev
+        luarocks install luasql-mysql MYSQL_INCDIR=/usr/include/mysql/
+        luarocks install luasql-postgres PGSQL_INCDIR=/usr/include/postgresql/ 
+        luarocks install luasql-sqlite3
       
