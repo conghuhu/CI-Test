@@ -133,41 +133,46 @@ jobs:
           cd 4daysorm-adapter
           sudo luarocks make *.rockspec
           cd ..
-      # - name: Set Kong-authz plugin globally by luasql
-      #   env:
-      #     MYSQL_DB: casbin
-      #     MYSQL_USER: root
-      #     MYSQL_PASSWORD: root
-      #   run: |
-      #     # remove last plugin
-      #     echo "${{ env.FILE_PLUGIN_ID }}"
-      #     curl -i -X DELETE --url http://localhost:8001/plugins/${{ env.FILE_PLUGIN_ID }}
-      #     # set the plugin globally
-      #     echo curl -i -X POST \
-      #     --url http://localhost:8001/plugins/ \
-      #     --data 'name=kong-authz' \
-      #     --data 'config.model_path=/etc/kong/authz_model.conf' \
-      #     --data 'config.username=user' \
-      #     --data 'config.adapter=luasql' \
-      #     --data 'config.db_info.db_type=mysql' \
-      #     --data 'config.db_info.database=${{ env.MYSQL_DB }}' \
-      #     --data 'config.db_info.username=${{ env.MYSQL_USER }}' \
-      #     --data 'config.db_info.password=${{ env.MYSQL_PASSWORD }}' \
-      #     --data 'config.db_info.host=127.0.0.1' \
-      #     --data 'config.db_info.port=3306' > temp2.log
+      - name: Set Kong-authz plugin globally by luasql
+        env:
+          MYSQL_DB: casbin
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+        run: |
+          # remove last plugin
+          echo "${{ env.FILE_PLUGIN_ID }}"
+          curl -i -X DELETE --url http://localhost:8001/plugins/${{ env.FILE_PLUGIN_ID }}
+          # set the plugin globally
+          echo curl -i -X POST \
+          --url http://localhost:8001/plugins/ \
+          --data 'name=kong-authz' \
+          --data 'config.model_path=/etc/kong/authz_model.conf' \
+          --data 'config.username=user' \
+          --data 'config.adapter=luasql' \
+          --data 'config.db_info.db_type=mysql' \
+          --data 'config.db_info.database=${{ env.MYSQL_DB }}' \
+          --data 'config.db_info.username=${{ env.MYSQL_USER }}' \
+          --data 'config.db_info.password=${{ env.MYSQL_PASSWORD }}' \
+          --data 'config.db_info.host=127.0.0.1' \
+          --data 'config.db_info.port=3306' > temp2.log
 
-      #     source temp2.log > result2
-      #     cat result2
-      #     id=$(cat result2 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
-      #     echo "SQL_PLUGIN_ID=$id" >> $GITHUB_ENV
+          source temp2.log > result2
+          cat result2
+          id=$(cat result2 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
+          echo "SQL_PLUGIN_ID=$id" >> $GITHUB_ENV
 
-      #     # restart kong
-      #     sudo kong stop
-      #     sudo kong start -c /etc/kong/kong.conf
-      #     cat /usr/local/kong/logs/error.log
-      # - name: Run luasql test
-      #   run: |
-      #     busted plugin_test.lua -o htest
+          # restart kong
+          sudo kong stop
+          sudo kong start -c /etc/kong/kong.conf
+          
+          sleep 1
+
+          curl -i -X POST --url http://127.0.0.1:8000/ --header 'user: anonymous' --header 'host: example.com'
+
+          cat /usr/local/kong/logs/error.log
+      - name: Run luasql test
+        run: |
+          busted plugin_test.lua -o htest
 
       - name: Set Kong-authz plugin globally by 4daysorm
         env:
@@ -176,8 +181,8 @@ jobs:
           MYSQL_PASSWORD: root
         run: |
           # remove last plugin
-          # echo "${{ env.SQL_PLUGIN_ID }}"
-          curl -i -X DELETE --url http://localhost:8001/plugins/${{ env.FILE_PLUGIN_ID }}
+          echo "${{ env.SQL_PLUGIN_ID }}"
+          curl -i -X DELETE --url http://localhost:8001/plugins/${{ env.SQL_PLUGIN_ID }}
           sleep 1
           # set the plugin globally
           echo curl -i -X POST \
@@ -208,7 +213,7 @@ jobs:
           curl -i -X POST --url http://127.0.0.1:8000/ --header 'user: anonymous' --header 'host: example.com'
 
           cat /usr/local/kong/logs/error.log
-          
+
       - name: Run 4daysorm test
         run: |
           busted plugin_test.lua -o htest
