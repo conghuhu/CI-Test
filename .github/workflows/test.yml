@@ -168,6 +168,7 @@ jobs:
           # remove last plugin
           # echo "${{ env.SQL_PLUGIN_ID }}"
           curl -i -X DELETE --url http://localhost:8001/plugins/${{ env.FILE_PLUGIN_ID }}
+          sleep 1
           # set the plugin globally
           echo curl -i -X POST \
           --url http://localhost:8001/plugins/ \
@@ -186,7 +187,8 @@ jobs:
           cat result3
           id=$(cat result3 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
           echo "ORM_PLUGIN_ID=$id" >> $GITHUB_ENV
-
+          sleep 1
+          
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
