@@ -17,12 +17,27 @@ end
 -- set DB decode
 conn:execute "SET NAMES UTF8"
 
+local initSQL = [[
+CREATE TABLE IF NOT EXISTS `casbin` (
+  `id` int(11) int NOT NULL AUTO_INCREMENT,
+  `v0` varchar(255) DEFAULT NULL,
+  `v1` varchar(255) DEFAULT NULL,
+  `v2` varchar(255) DEFAULT NULL,
+  `v3` varchar(255) DEFAULT NULL,
+  `v5` varchar(255) DEFAULT NULL,
+  `v4` varchar(255) DEFAULT NULL,
+  `ptype` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+)
+]]
+
 -- 4daysorm content
 local ormSQL =
   [[
     INSERT INTO `casbin` VALUES (1,'*','/','GET',NULL,NULL,NULL,'p'),(2,'admin','*','*',NULL,NULL,NULL,'p'),(3,'alice','admin',NULL,NULL,NULL,NULL,'g')
 ]]
 
+conn.execute(initSQL)
 -- execute database action
 conn:execute(ormSQL)
 
