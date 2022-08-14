@@ -201,6 +201,7 @@ jobs:
           cat result3
           id=$(cat result3 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
           echo "ORM_PLUGIN_ID=$id" >> $GITHUB_ENV
+          
           sleep 1
 
           # restart kong
