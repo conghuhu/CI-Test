@@ -37,7 +37,7 @@ local ormSQL =
     INSERT INTO `casbin` VALUES (1,'*','/','GET',NULL,NULL,NULL,'p'),(2,'admin','*','*',NULL,NULL,NULL,'p'),(3,'alice','admin',NULL,NULL,NULL,NULL,'g')
 ]]
 
-conn.execute(initSQL)
+conn:execute(initSQL)
 -- execute database action
 conn:execute(ormSQL)
 
