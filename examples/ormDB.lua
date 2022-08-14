@@ -26,5 +26,16 @@ local ormSQL =
 -- execute database action
 conn:execute(ormSQL)
 
+local all = conn:execute("select * from casbin")
+local row = all:fetch({}, "a")
+
+while row do
+  local var = string.format("%d %s %s %s %s\n", row.id, row.ptype, row.v0, row.v1, tostring(row.v2))
+
+  print(var)
+
+  row = all:fetch(row, "a")
+end
+
 conn:close() -- close database connect
 env:close() -- close database env

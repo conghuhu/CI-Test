@@ -7,6 +7,10 @@ local database = os.getenv("MYSQL_DB") or "casbin"
 local user = os.getenv("MYSQL_USER") or "root"
 local password = os.getenv("MYSQL_PASSWORD") or "root"
 
+print(database)
+print(user)
+print(password)
+
 -- connect mysql
 local conn, err = env:connect(database, user, password, "127.0.0.1", "3306")
 
@@ -25,6 +29,17 @@ local luasqlSQL =
 
 -- execute database action
 conn:execute(luasqlSQL)
+
+local all = conn:execute("select * from casbin_rule")
+local row = all:fetch({}, "a")
+
+while row do
+  local var = string.format("%d %s %s %s %s\n", row.id, row.ptype, row.v0, row.v1, tostring(row.v2))
+
+  print(var)
+
+  row = all:fetch(row, "a")
+end
 
 conn:close() -- close database connect
 env:close() -- close database env
