@@ -164,7 +164,6 @@ jobs:
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
-          
           sleep 1
 
           curl -i -X POST --url http://127.0.0.1:8000/ --header 'user: anonymous' --header 'host: example.com'
