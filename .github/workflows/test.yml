@@ -106,6 +106,7 @@ jobs:
           mysql -e 'CREATE DATABASE ${{ env.MYSQL_DB }};' -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASSWORD }}
           sudo apt install sqlite3 libsqlite3-dev lua-sql-mysql libpq-dev
           sudo git clone https://github.com/lunarmodules/luasql.git
+          # install luasql driver
           cd luasql/rockspec
           sudo cp ./luasql-mysql-2.6.0-1.rockspec ../luasql-mysql-2.6.0-1.rockspec
           sudo cp ./luasql-postgres-2.6.0-1.rockspec ../luasql-postgres-2.6.0-1.rockspec
@@ -123,6 +124,15 @@ jobs:
           sleep 1
           lua ./examples/ormDB.lua
           sleep 1
+          # install adapter
+          sudo git clone https://github.com/casbin-lua/luasql-adapter.git
+          cd luasql-adapter
+          sudo luarocks make *.rockspec
+          cd ..
+          sudo git clone https://github.com/casbin-lua/4daysorm-adapter.git
+          cd 4daysorm-adapter
+          sudo luarocks make *.rockspec
+          cd ..
       # - name: Set Kong-authz plugin globally by luasql
       #   env:
       #     MYSQL_DB: casbin
@@ -188,7 +198,7 @@ jobs:
           id=$(cat result3 | sed 's/,/\n/g' | grep "id" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'| sed 's/"//g')
           echo "ORM_PLUGIN_ID=$id" >> $GITHUB_ENV
           sleep 1
-          
+
           # restart kong
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
