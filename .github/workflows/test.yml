@@ -195,7 +195,7 @@ jobs:
 
           source temp4.log > result4
           cat result4
-          cat /usr/local/kong/logs/error.log
+          # cat /usr/local/kong/logs/error.log
           
       - name: Run 4daysorm test
         run: |
