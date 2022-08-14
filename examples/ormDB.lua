@@ -19,7 +19,7 @@ conn:execute "SET NAMES UTF8"
 
 local initSQL = [[
 CREATE TABLE IF NOT EXISTS `casbin` (
-  `id` int(11) int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `v0` varchar(255) DEFAULT NULL,
   `v1` varchar(255) DEFAULT NULL,
   `v2` varchar(255) DEFAULT NULL,
