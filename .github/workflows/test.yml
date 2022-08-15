@@ -109,18 +109,16 @@ jobs:
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE ${{ env.MYSQL_DB }};' -u${{ env.MYSQL_USER }} -p${{ env.MYSQL_PASSWORD }}
           sudo apt install sqlite3 libsqlite3-dev lua-sql-mysql libpq-dev
-          git clone https://github.com/lunarmodules/luasql.git
+          sudo git clone https://github.com/lunarmodules/luasql.git
           # install luasql driver
-          cd luasql
-          git checkout 2.6.0
-          cd rockspec
-          cp ./luasql-mysql-2.6.0-1.rockspec ../luasql-mysql-2.6.0-1.rockspec
-          cp ./luasql-postgres-2.6.0-1.rockspec ../luasql-postgres-2.6.0-1.rockspec
-          cp ./luasql-sqlite3-2.6.0-1.rockspec ../luasql-sqlite3-2.6.0-1.rockspec
+          cd luasql/rockspec
+          sudo cp ./luasql-mysql-2.6.0-1.rockspec ../luasql-mysql-2.6.0-1.rockspec
+          sudo cp ./luasql-postgres-2.6.0-1.rockspec ../luasql-postgres-2.6.0-1.rockspec
+          sudo cp ./luasql-sqlite3-2.6.0-1.rockspec ../luasql-sqlite3-2.6.0-1.rockspec
           cd ..
-          luarocks make luasql-mysql-2.6.0-1.rockspec MYSQL_INCDIR=/usr/include/mysql/
-          luarocks make luasql-postgres-2.6.0-1.rockspec PGSQL_INCDIR=/usr/include/postgresql/
-          luarocks make luasql-sqlite3-2.6.0-1.rockspec
+          sudo luarocks make luasql-mysql-2.6.0-1.rockspec MYSQL_INCDIR=/usr/include/mysql/
+          sudo luarocks make luasql-postgres-2.6.0-1.rockspec PGSQL_INCDIR=/usr/include/postgresql/
+          sudo luarocks make luasql-sqlite3-2.6.0-1.rockspec
           cd ..
           # init policy data
           export MYSQL_DB=${{ env.MYSQL_DB }}
@@ -171,6 +169,7 @@ jobs:
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
           sleep 1
+
       - name: Run luasql test
         run: |
           busted plugin_test.lua -o htest
