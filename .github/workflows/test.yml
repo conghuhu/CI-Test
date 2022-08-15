@@ -171,7 +171,6 @@ jobs:
           sudo kong stop
           sudo kong start -c /etc/kong/kong.conf
           sleep 1
-
       - name: Run luasql test
         run: |
           busted plugin_test.lua -o htest
