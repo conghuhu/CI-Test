@@ -31,9 +31,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: test
+        run: echo "RANDOM_HASH=$(echo "$RANDOM"|md5sum|cut -c 5-15)" >> $GITHUB_ENV
+
+      - name: test env
         env:
-          IMAGE_TAG: preview-${{echo "$RANDOM"|md5sum|cut -c 5-15}}
-        run: echo $IMAGE_TAG
+          IMAGE_TAG: preview-${{ env.RANDOM_HASH }}
 
       - name: Install Kong and setup kong-authz
         run: |
