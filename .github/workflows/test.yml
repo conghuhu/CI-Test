@@ -36,6 +36,7 @@ jobs:
       - name: test env
         env:
           IMAGE_TAG: preview-${{ env.RANDOM_HASH }}
+        run: echo $IMAGE_TAG
 
       - name: Install Kong and setup kong-authz
         run: |
