@@ -30,6 +30,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: test
+        env:
+          IMAGE_TAG: preview-$(echo "$RANDOM"|md5sum|cut -c 5-15)
+        run: echo $IMAGE_TAG
+
       - name: Install Kong and setup kong-authz
         run: |
           # install and configure kong
